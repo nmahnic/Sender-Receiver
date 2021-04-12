@@ -1,10 +1,14 @@
 package com.nicomahnic.tests.receiver
 
 import android.content.Intent
+import android.net.MacAddress.fromString
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import com.google.gson.Gson
+import java.nio.file.attribute.PosixFilePermissions.fromString
+import java.util.UUID.fromString
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,9 +38,14 @@ class MainActivity : AppCompatActivity() {
     fun handleSendText(intent: Intent) {
         val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
         if (sharedText != null) {
-            texto.text = sharedText
-            myName = sharedText
+            val item = Gson().fromJson(sharedText,Item::class.java)
+            texto.text = "${item.name} ${item.lastName}"
+            myName = "${item.name} ${item.lastName}"
         }
     }
 }
 
+data class Item(
+        val name: String,
+        val lastName: String
+)
