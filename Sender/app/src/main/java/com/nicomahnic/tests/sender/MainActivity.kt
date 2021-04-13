@@ -22,13 +22,20 @@ class MainActivity : AppCompatActivity() {
 
         val boton = findViewById<Button>(R.id.btnEnter)
         boton.setOnClickListener {
-            launchIngpPinpad(Student("Nicolas", "Mahnic"))
+            val transaction = Payment(
+                    currency = "UYU",
+                    currencyCode = 858,
+                    transactionType = TransactionType.SALE,
+                    amount = 12.50,
+
+            )
+            launchIngpPinpad(transaction)
         }
     }
 
 
-    private fun launchIngpPinpad(data: Student) {
-        Log.d("NM", "1) Envio ${data.name} ${data.lastName}")
+    private fun launchIngpPinpad(data: Payment) {
+        Log.d("NM", "1) Envio ${data}")
         val sendData = Gson().toJson(data)
 
         val sendIntent = Intent()
@@ -36,15 +43,12 @@ class MainActivity : AppCompatActivity() {
         sendIntent.putExtra(Intent.EXTRA_TEXT, sendData)
         sendIntent.type = "text/plain"
 
-        val hola = CustomChooserIntent.create(getPackageManager(),sendIntent,"",listOf<String>("com.nicomahnic.tests.receiver"))
+        val pm = getPackageManager()
+        val sharedIntent = CustomSenderIntent.create(pm,sendIntent,"com.nicomahnic.tests.receiver")
 
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivityForResult(hola, REQUEST_CODE)
+        startActivityForResult(sharedIntent, REQUEST_CODE)
 
     }
-    // simpleName: "Receiver"
-    // className: "com.nicomahnic.tests.receiver.MainActivity"
-    // packageName: "com.nicomahnic.tests.receiver"
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -52,21 +56,33 @@ class MainActivity : AppCompatActivity() {
 
             val resultFromActivity2 = data!!.getStringExtra("result")
             resultFromActivity2?.let{
-                val item = Gson().fromJson(it, Engineer::class.java)
-                Log.d("NM", "1) Respuesta ${item.name} ${item.lastName} ${item.job}")
+                val item = Gson().fromJson(it, PaymentResault::class.java)
+                Log.d("NM", "1) Respuesta ${item}")
             }
         }
-//        Log.d("NM","1) FIN requestCode:${requestCode} resultCode:${resultCode}")
     }
 }
 
-data class Student(
-        val name: String,
-        val lastName: String,
+data class Payment(
+        val currency: String,
+        val currencyCode: Int,
+        val transactionType: TransactionType,
+        val amount: Double
 )
 
-data class Engineer(
-        val name: String,
-        val lastName: String,
-        val job: String
+data class PaymentResault(
+        val transactionResault: String,
+        val errorCode: String,
+        val issuer: String,
+        val installments: Int,
+        val approvedCode: String,
+        val rrn: String,
+        val maskedCardNo: String
 )
+
+enum class TransactionType {
+    SALE,
+    OFFLINE_SALE,
+    VOID,
+    REFUND,
+}

@@ -35,13 +35,20 @@ class MainActivity : AppCompatActivity() {
     fun handleSendText(intent: Intent) {
         val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
         sharedText?.let {
-            val item = Gson().fromJson(it, Student::class.java)
+            val item = Gson().fromJson(it, Payment::class.java)
 
-            texto.text = "${item.name} ${item.lastName}"
-            Log.d("NM", "2) Recibo ${item.name} ${item.lastName}")
+            Log.d("NM", "2) Recibo ${item}")
 
 
-            val data = Engineer("Nicolas","Mahnic", "Developer")
+            val data = PaymentResault(
+                    transactionResault = "APPROVED",
+                    errorCode = "00",
+                    issuer = "VISA DEBITO",
+                    installments = 1,
+                    approvedCode = "123456",
+                    rrn = "123456123456",
+                    maskedCardNo = "4567 89XX XXXX 1234"
+            )
             val dataReturn = Gson().toJson(data)
 
             val returnIntent = Intent()
@@ -55,13 +62,26 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-data class Student(
-        val name: String,
-        val lastName: String,
+data class Payment(
+        val currency: String,
+        val currencyCode: Int,
+        val transactionType: TransactionType,
+        val amount: Double
 )
 
-data class Engineer(
-        val name: String,
-        val lastName: String,
-        val job: String
+data class PaymentResault(
+        val transactionResault: String,
+        val errorCode: String,
+        val issuer: String,
+        val installments: Int,
+        val approvedCode: String,
+        val rrn: String,
+        val maskedCardNo: String
 )
+
+enum class TransactionType {
+    SALE,
+    OFFLINE_SALE,
+    VOID,
+    REFUND,
+}
