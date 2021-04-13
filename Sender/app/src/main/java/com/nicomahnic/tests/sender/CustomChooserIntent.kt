@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Parcelable
 import java.util.*
 
+//Taken from https://gist.github.com/mediavrog/5625602
 
 object CustomChooserIntent {
     /**
