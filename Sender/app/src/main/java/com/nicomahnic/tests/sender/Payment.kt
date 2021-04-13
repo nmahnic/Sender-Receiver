@@ -21,8 +21,7 @@ class Payment private constructor(val context: Context){
             tempInstance?.let { return tempInstance }
 
             synchronized(this) {
-                val instance = Payment(context).apply {
-                }
+                val instance = Payment(context)
                 INSTANCE = instance
                 return instance
             }
