@@ -35,18 +35,16 @@ class MainActivity : AppCompatActivity() {
         sendIntent.action = Intent.ACTION_SEND
         sendIntent.putExtra(Intent.EXTRA_TEXT, sendData)
         sendIntent.type = "text/plain"
-//        sendIntent.setPackage("com.nicomahnic.tests.receiver")
-//        sendIntent.setClassName(this, "com.nicomahnic.tests.receiver.MainActivity")
 
-        val hola = CustomChooserIntent.create(getPackageManager(),sendIntent,"HOLA",listOf<String>("com.nicomahnic.tests.receiver"))
+        val hola = CustomChooserIntent.create(getPackageManager(),sendIntent,"",listOf<String>("com.nicomahnic.tests.receiver"))
 
         val shareIntent = Intent.createChooser(sendIntent, null)
         startActivityForResult(hola, REQUEST_CODE)
 
-// simpleName: "Receiver"
-// className: "com.nicomahnic.tests.receiver.MainActivity"
-// packageName: "com.nicomahnic.tests.receiver"
     }
+    // simpleName: "Receiver"
+    // className: "com.nicomahnic.tests.receiver.MainActivity"
+    // packageName: "com.nicomahnic.tests.receiver"
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
