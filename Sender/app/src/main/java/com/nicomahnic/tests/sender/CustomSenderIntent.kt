@@ -18,8 +18,7 @@ object CustomSenderIntent {
      * @param whitelist A list of package names that are allowed to show.
      * @return Updated intent, to be passed to [android.content.Context.startActivity].
      */
-    fun create(pm: PackageManager, target: Intent,
-               whitelist: String): Intent {
+    fun create(pm: PackageManager, target: Intent, whitelist: String): Intent {
         val dummy = Intent(target.action)
         dummy.type = target.type
         val resQuery = pm.queryIntentActivities(dummy, 0)

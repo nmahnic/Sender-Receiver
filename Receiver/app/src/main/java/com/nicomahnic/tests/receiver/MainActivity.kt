@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     fun handleSendText(intent: Intent) {
         val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
         sharedText?.let {
-            val item = Gson().fromJson(it, Payment::class.java)
+            val item = Gson().fromJson(it, DoPayment::class.java)
 
             Log.d("NM", "2) Recibo ${item}")
 
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-data class Payment(
+data class DoPayment(
         val currency: String,
         val currencyCode: Int,
         val transactionType: TransactionType,

@@ -6,13 +6,11 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
-
 
 class MainActivity : AppCompatActivity() {
 //    adb shell am start -n com.nicomahnic.tests.sender/com.nicomahnic.tests.sender.MainActivity
     private lateinit var texto : TextView
-    val REQUEST_CODE = 255
+    private lateinit var payment : Payment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,48 +20,26 @@ class MainActivity : AppCompatActivity() {
 
         val boton = findViewById<Button>(R.id.btnEnter)
         boton.setOnClickListener {
-            val transaction = Payment(
+            val transaction = DoPayment(
                     currency = "UYU",
                     currencyCode = 858,
                     transactionType = TransactionType.SALE,
                     amount = 12.50,
-
             )
-            launchIngpPinpad(transaction)
+            payment = Payment.getInstance(this)
+            val newIntent = payment.launchIngpPinpad(transaction, getPackageManager())
+
+            startActivityForResult(newIntent.first,newIntent.second)
         }
-    }
-
-
-    private fun launchIngpPinpad(data: Payment) {
-        Log.d("NM", "1) Envio ${data}")
-        val sendData = Gson().toJson(data)
-
-        val sendIntent = Intent()
-        sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, sendData)
-        sendIntent.type = "text/plain"
-
-        val pm = getPackageManager()
-        val sharedIntent = CustomSenderIntent.create(pm,sendIntent,"com.nicomahnic.tests.receiver")
-
-        startActivityForResult(sharedIntent, REQUEST_CODE)
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-
-            val resultFromActivity2 = data!!.getStringExtra("result")
-            resultFromActivity2?.let{
-                val item = Gson().fromJson(it, PaymentResault::class.java)
-                Log.d("NM", "1) Respuesta ${item}")
-            }
-        }
+        payment.onActivityResult(requestCode, resultCode, data)
     }
 }
 
-data class Payment(
+data class DoPayment(
         val currency: String,
         val currencyCode: Int,
         val transactionType: TransactionType,
