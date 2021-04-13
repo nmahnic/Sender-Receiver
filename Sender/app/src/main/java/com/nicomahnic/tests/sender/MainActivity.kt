@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 
+
 class MainActivity : AppCompatActivity() {
 //    adb shell am start -n com.nicomahnic.tests.sender/com.nicomahnic.tests.sender.MainActivity
     private lateinit var texto : TextView
@@ -27,15 +28,24 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun launchIngpPinpad(data: Student) {
-        Log.d("NM","1) Envio ${data.name} ${data.lastName}")
+        Log.d("NM", "1) Envio ${data.name} ${data.lastName}")
         val sendData = Gson().toJson(data)
 
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
         sendIntent.putExtra(Intent.EXTRA_TEXT, sendData)
         sendIntent.type = "text/plain"
+//        sendIntent.setPackage("com.nicomahnic.tests.receiver")
+//        sendIntent.setClassName(this, "com.nicomahnic.tests.receiver.MainActivity")
+
+        val hola = CustomChooserIntent.create(getPackageManager(),sendIntent,"HOLA",listOf<String>("com.nicomahnic.tests.receiver"))
+
         val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivityForResult(shareIntent, REQUEST_CODE)
+        startActivityForResult(hola, REQUEST_CODE)
+
+// simpleName: "Receiver"
+// className: "com.nicomahnic.tests.receiver.MainActivity"
+// packageName: "com.nicomahnic.tests.receiver"
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -44,8 +54,8 @@ class MainActivity : AppCompatActivity() {
 
             val resultFromActivity2 = data!!.getStringExtra("result")
             resultFromActivity2?.let{
-                val item = Gson().fromJson(it,Engineer::class.java)
-                Log.d("NM","1) Respuesta ${item.name} ${item.lastName} ${item.job}")
+                val item = Gson().fromJson(it, Engineer::class.java)
+                Log.d("NM", "1) Respuesta ${item.name} ${item.lastName} ${item.job}")
             }
         }
 //        Log.d("NM","1) FIN requestCode:${requestCode} resultCode:${resultCode}")
