@@ -41,7 +41,8 @@ class MainActivity : AppCompatActivity() {
         sendIntent.type = "text/plain"
 
 
-        val sharedIntent = CustomSenderIntent.create(pm,sendIntent,"com.nicomahnic.tests.receiver")
+        val sharedIntent = CustomSenderIntent.create(pm,sendIntent,"com.ingenico.ingp.standalone")
+//        val sharedIntent = CustomSenderIntent.create(pm,sendIntent,"com.nicomahnic.tests.receiver")
         startActivityForResult(sharedIntent, REQUEST_CODE)
     }
 
@@ -50,8 +51,8 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
             val resultFromActivity2 = data!!.getStringExtra("result")
             resultFromActivity2?.let{
-                val item = Gson().fromJson(it, PaymentResault::class.java)
-                Log.d("NM", "1) Respuesta ${item}")
+                //val item = Gson().fromJson(it, PaymentResault::class.java)
+                Log.d("NM", "1) Respuesta ${resultFromActivity2}")
             }
         }
     }
