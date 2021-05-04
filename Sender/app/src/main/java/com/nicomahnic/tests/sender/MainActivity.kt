@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             val transaction = Payment(
                     currency = "UYU",
                     currencyCode = 858,
-                    transactionType = TransactionType.SALE,
+                    transactionType = TransactionType.SALE.name,
                     amount = 12.50,
             )
             launchIngpPinpad(transaction, getPackageManager())
@@ -33,11 +33,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun launchIngpPinpad(data: Payment, pm: PackageManager){
-        val sendData = Gson().toJson(data)
         Log.d("NM", "1) Envio ${data}")
         val sendIntent = Intent()
         sendIntent.action = Intent.ACTION_SEND
-        sendIntent.putExtra(Intent.EXTRA_TEXT, sendData)
+        sendIntent.putExtra("currency", data.currency)
+        sendIntent.putExtra("currencyCode", data.currencyCode)
+        sendIntent.putExtra("transactionType", data.transactionType)
+        sendIntent.putExtra("amount", data.amount)
         sendIntent.type = "text/plain"
 
 
@@ -49,10 +51,19 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE && resultCode == AppCompatActivity.RESULT_OK) {
-            val resultFromActivity2 = data!!.getStringExtra("result")
+
+            val resultFromActivity2 = PaymentResault(
+                    transactionResault = data!!.getStringExtra("transactionResault")!!,
+                    errorCode = data.getStringExtra("errorCode")!!,
+                    issuer = data.getStringExtra("issuer")!!,
+                    installments = data.getIntExtra("installments", 0),
+                    approvedCode = data.getStringExtra("approvedCode")!!,
+                    rrn = data.getStringExtra("rrn")!!,
+                    maskedCardNo = data.getStringExtra("maskedCardNo")!!
+            )
+
             resultFromActivity2?.let{
-                //val item = Gson().fromJson(it, PaymentResault::class.java)
-                Log.d("NM", "1) Respuesta ${resultFromActivity2}")
+                Log.d("NM", "1) Respuesta ${it}")
             }
         }
     }
@@ -61,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 data class Payment(
         val currency: String,
         val currencyCode: Int,
-        val transactionType: TransactionType,
+        val transactionType: String,
         val amount: Double
 )
 
