@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
                     currency = "UYU",
                     currencyCode = 858,
                     transactionType = TransactionType.SALE.name,
-                    amount = 12.50,
+                    amount = 130.50,
             )
             launchIngpPinpad(transaction, getPackageManager())
         }
@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         val sharedIntent = CustomSenderIntent.create(pm,sendIntent,"com.ingenico.ingp.standalone")
 //        val sharedIntent = CustomSenderIntent.create(pm,sendIntent,"com.nicomahnic.tests.receiver")
         startActivityForResult(sharedIntent, REQUEST_CODE)
+//        startActivity(sharedIntent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -55,11 +56,12 @@ class MainActivity : AppCompatActivity() {
             val resultFromActivity2 = PaymentResault(
                     transactionResault = data!!.getStringExtra("transactionResault")!!,
                     errorCode = data.getStringExtra("errorCode")!!,
-                    issuer = data.getStringExtra("issuer")!!,
+                    issuer = data.getStringExtra("issuer"),
+                    cardholder = data.getStringExtra("cardholder"),
                     installments = data.getIntExtra("installments", 0),
-                    approvedCode = data.getStringExtra("approvedCode")!!,
-                    rrn = data.getStringExtra("rrn")!!,
-                    maskedCardNo = data.getStringExtra("maskedCardNo")!!
+                    approvedCode = data.getStringExtra("approvedCode"),
+                    rrn = data.getStringExtra("rrn"),
+                    maskedCardNo = data.getStringExtra("maskedCardNo")
             )
 
             resultFromActivity2?.let{
@@ -79,16 +81,16 @@ data class Payment(
 data class PaymentResault(
         val transactionResault: String,
         val errorCode: String,
-        val issuer: String,
-        val installments: Int,
-        val approvedCode: String,
-        val rrn: String,
-        val maskedCardNo: String
+        val issuer: String?,
+        val cardholder: String?,
+        val installments: Int?,
+        val approvedCode: String?,
+        val rrn: String?,
+        val maskedCardNo: String?
 )
 
 enum class TransactionType {
     SALE,
-    OFFLINE_SALE,
     VOID,
     REFUND,
 }
