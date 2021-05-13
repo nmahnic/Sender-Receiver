@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnRefund : Button
     private lateinit var btnSale : Button
     private lateinit var btnVoid : Button
+    private lateinit var btnLaunch : Button
     private val REQUEST_CODE = 255
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         btnRefund = findViewById<Button>(R.id.btnRefund)
         btnSale = findViewById<Button>(R.id.btnSale)
         btnVoid = findViewById<Button>(R.id.btnVoid)
+        btnLaunch = findViewById<Button>(R.id.btnLaunch)
 
 
         btnVoid.setOnClickListener {
@@ -36,6 +38,10 @@ class MainActivity : AppCompatActivity() {
 
         btnRefund.setOnClickListener {
             launchIngpPinpad(transactionRefund, getPackageManager())
+        }
+
+        btnLaunch.setOnClickListener {
+            launchACC(getPackageManager())
         }
     }
 
@@ -51,9 +57,16 @@ class MainActivity : AppCompatActivity() {
 
 
         val sharedIntent = CustomSenderIntent.create(pm,sendIntent,"com.ingenico.ingp.standalone")
-//        val sharedIntent = CustomSenderIntent.create(pm,sendIntent,"com.nicomahnic.tests.receiver")
         startActivityForResult(sharedIntent, REQUEST_CODE)
-//        startActivity(sharedIntent)
+
+    }
+
+    private fun launchACC(pm: PackageManager){
+        val sendIntent = Intent()
+        sendIntent.type = "text/plain"
+
+        val sharedIntent = CustomSenderIntent.create(pm,sendIntent,"com.ingenico.ingp.standalone")
+        startActivity(sharedIntent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
