@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnSale"
+        app:layout_constraintBottom_toTopOf="@+id/btnEnter"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvMainLabel" />
@@ -22,37 +22,18 @@
         android:layout_height="wrap_content"
         android:text="Sender App"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnRefund"
+        app:layout_constraintBottom_toTopOf="@+id/btnEnter"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnSale"
+        android:id="@+id/btnEnter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SALE"
+        android:layout_marginTop="332dp"
+        android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnVoid" />
-
-    <Button
-        android:id="@+id/btnVoid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="VOID"
-        app:layout_constraintBottom_toTopOf="@+id/btnSale"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnRefund" />
-
-    <Button
-        android:id="@+id/btnRefund"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="REFUND"
-        app:layout_constraintBottom_toTopOf="@+id/btnVoid"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvMainLabel" />
