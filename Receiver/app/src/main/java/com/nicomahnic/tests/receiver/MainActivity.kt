@@ -2,6 +2,8 @@ package com.nicomahnic.tests.receiver
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,7 @@ import com.google.gson.Gson
 class MainActivity : AppCompatActivity() {
 
     lateinit var texto: TextView
+    private val SPLASH_TIME_OUT:Long = 2000 // 2 sec
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +54,25 @@ class MainActivity : AppCompatActivity() {
             )
             val dataReturn = Gson().toJson(data)
 
-            val returnIntent = Intent()
-            returnIntent.putExtra("result", dataReturn)
-            returnIntent.action = Intent.ACTION_SEND
-            returnIntent.type = "text/plain"
-            setResult(RESULT_OK, returnIntent)
 
-            finish()
+            Run.after(SPLASH_TIME_OUT) {
+                val returnIntent = Intent()
+                returnIntent.putExtra("result", dataReturn)
+                returnIntent.action = Intent.ACTION_SEND
+                returnIntent.type = "text/plain"
+                setResult(RESULT_OK, returnIntent)
+
+                finish()
+            }
+
+        }
+    }
+
+    companion object Run {
+        fun after(delay: Long, process: () -> Unit) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                process()
+            }, delay)
         }
     }
 }
