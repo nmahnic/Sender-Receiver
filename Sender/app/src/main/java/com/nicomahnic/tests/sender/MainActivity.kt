@@ -8,11 +8,13 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import com.nicomahnic.tests.sender.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 //    adb shell am start -n com.nicomahnic.tests.sender/com.nicomahnic.tests.sender.MainActivity
     private lateinit var texto : TextView
     private val REQUEST_CODE = 255
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,15 +22,18 @@ class MainActivity : AppCompatActivity() {
         Log.d("NM", "1) onCreate")
         texto = findViewById<TextView>(R.id.tvResult)
 
-        val boton = findViewById<Button>(R.id.btnEnter)
-        boton.setOnClickListener {
-            val transaction = Payment(
-                    currency = "UYU",
-                    currencyCode = 858,
-                    transactionType = TransactionType.SALE.name,
-                    amount = 130.50,
-            )
-            launchIngpPinpad(transaction, getPackageManager())
+
+        binding.btnVoid.setOnClickListener {
+            launchIngpPinpad(transactionVoid, getPackageManager())
+        }
+
+        binding.btnSale.setOnClickListener {
+            launchIngpPinpad(transactionSale, getPackageManager())
+        }
+
+        binding.btnRefund.setOnClickListener {
+            launchIngpPinpad(transactionRefund, getPackageManager())
+
         }
     }
 
@@ -55,9 +60,10 @@ class MainActivity : AppCompatActivity() {
 
             val resultFromActivity2 = PaymentResault(
                     transactionResault = data!!.getStringExtra("transactionResault")!!,
-                    errorCode = data.getStringExtra("errorCode")!!,
+                    errorCode = data.getStringExtra("errorCode"),
                     issuer = data.getStringExtra("issuer"),
                     cardholder = data.getStringExtra("cardholder"),
+                    transactionType = data.getStringExtra("transactionType")!!,
                     installments = data.getIntExtra("installments", 0),
                     approvedCode = data.getStringExtra("approvedCode"),
                     rrn = data.getStringExtra("rrn"),
@@ -69,20 +75,39 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    val transactionVoid = Payment(
+            currency = "UYU",
+            currencyCode = 858,
+            transactionType = TransactionType.VOID.name
+    )
+    val transactionSale = Payment(
+            currency = "UYU",
+            currencyCode = 858,
+            transactionType = TransactionType.SALE.name,
+            amount = 101.50,
+    )
+    val transactionRefund = Payment(
+            currency = "UYU",
+            currencyCode = 858,
+            transactionType = TransactionType.REFUND.name,
+            amount = 90.00,
+    )
 }
 
 data class Payment(
         val currency: String,
         val currencyCode: Int,
         val transactionType: String,
-        val amount: Double
+        val amount: Double? = null
 )
 
 data class PaymentResault(
         val transactionResault: String,
-        val errorCode: String,
+        val errorCode: String?,
         val issuer: String?,
         val cardholder: String?,
+        val transactionType: String,
         val installments: Int?,
         val approvedCode: String?,
         val rrn: String?,
