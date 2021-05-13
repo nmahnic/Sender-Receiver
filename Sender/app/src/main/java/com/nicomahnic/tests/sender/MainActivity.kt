@@ -7,33 +7,35 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
-import com.nicomahnic.tests.sender.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 //    adb shell am start -n com.nicomahnic.tests.sender/com.nicomahnic.tests.sender.MainActivity
     private lateinit var texto : TextView
+    private lateinit var btnRefund : Button
+    private lateinit var btnSale : Button
+    private lateinit var btnVoid : Button
     private val REQUEST_CODE = 255
-    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val view = setContentView(R.layout.activity_main)
         Log.d("NM", "1) onCreate")
         texto = findViewById<TextView>(R.id.tvResult)
+        btnRefund = findViewById<Button>(R.id.btnRefund)
+        btnSale = findViewById<Button>(R.id.btnSale)
+        btnVoid = findViewById<Button>(R.id.btnVoid)
 
 
-        binding.btnVoid.setOnClickListener {
+        btnVoid.setOnClickListener {
             launchIngpPinpad(transactionVoid, getPackageManager())
         }
 
-        binding.btnSale.setOnClickListener {
+        btnSale.setOnClickListener {
             launchIngpPinpad(transactionSale, getPackageManager())
         }
 
-        binding.btnRefund.setOnClickListener {
+        btnRefund.setOnClickListener {
             launchIngpPinpad(transactionRefund, getPackageManager())
-
         }
     }
 
