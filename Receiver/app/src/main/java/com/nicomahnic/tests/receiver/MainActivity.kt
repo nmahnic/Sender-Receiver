@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 data class DoPayment(
         val currency: String,
         val currencyCode: Int,
-        val transactionType: TransactionType,
+        val transactionType: String,
         val amount: Double
 )
 
